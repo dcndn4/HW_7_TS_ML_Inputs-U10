@@ -85,9 +85,13 @@ y_test = test["Returns"]
 print(X_train)
 
 #%%
+#%%
+#%%
 
 # Linear Regression Model
 
+#%%
+#%%
 #%%
 
 # Create a Linear Regression model and fit it to the training data
@@ -106,5 +110,55 @@ model = LinearRegression()
 
 #%%
 
-
 model.fit(X, y_train)
+
+#%%
+#%%
+#%%
+
+# Make predictions using the Testing Data¶
+
+# Note: We want to evaluate the model using data that it has never seen before, in this case: X_test.
+
+#%%
+#%%
+#%%
+
+# Make a prediction of "y" values using just the test dataset
+predicted_y_values = model.predict(X)
+
+#%%
+
+# Assemble actual y data (Y_test) with predicted y data (from just above) into two columns in a dataframe:
+# YOUR CODE HERE!
+
+#%%
+
+
+
+#%%%
+#%%%
+#%%
+# Out-of-Sample Performance¶
+
+# Evaluate the model using "out-of-sample" data (X_test and y_test)
+
+#%%
+#%%
+#%%
+
+from sklearn.metrics import mean_squared_error
+# Calculate the mean_squared_error (MSE) on actual versus predicted test "y" 
+
+# Mean Squared Error
+mse = mean_squared_error(y_train, predicted_y_values)
+print(mse)
+
+#%%
+
+# Using that mean-squared-error, calculate the root-mean-squared error (RMSE):
+rmse = np.sqrt(mse)
+print(rmse)
+
+#%%
+
