@@ -65,7 +65,7 @@ print(returns.tail())
 #%%
 
 # Create a train/test split for the data using 2018-2019 for testing and the rest for training
-train = returns.loc[:"2017"]
+train = returns.loc[:"2017"].dropna()
 test = returns.loc["2018":"2019"]
 
 
