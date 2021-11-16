@@ -65,8 +65,9 @@ print(returns.tail())
 #%%
 
 # Create a train/test split for the data using 2018-2019 for testing and the rest for training
-train = returns[:'2017']
-test = returns['2018':]
+train = returns.loc[:"2017"]
+test = returns.loc["2018":"2019"]
+
 
 #%%
 
@@ -76,8 +77,8 @@ test = returns['2018':]
 X_train = train["Lagged_Return"].to_frame()
 X_test = test["Lagged_Return"].to_frame()
 
-y_train = train["Returns"]
-y_test = test["Returns"]
+y_train = train["Return_Amt"]
+y_test = test["Return_Amt"]
 
 #%%
 
