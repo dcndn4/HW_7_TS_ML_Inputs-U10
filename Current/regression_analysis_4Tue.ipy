@@ -65,7 +65,7 @@ print(returns.tail())
 #%%
 
 # Create a train/test split for the data using 2018-2019 for testing and the rest for training
-train = returns.loc[:"2017"].dropna()
+train = returns.loc["2010":"2017"].dropna()
 test = returns.loc["2018":"2019"]
 
 
@@ -177,8 +177,35 @@ rmse = np.sqrt(mse)
 print(rmse)
 
 #%%
+#%%
+#%%
 
+# In-Sample Performance
+
+# Evaluate the model using in-sample data (X_train and y_train)
 
 
 #%%
+#%%
+#%%
+# Make a prediction of "y" values using the train dataset
+predicted_y_train_values = model.predict(X)
 
+#%%
+
+# Construct a dataframe using just the "y" training data:
+Results_train = y_train.to_frame()
+Results_train["Predicted Return"] = predicted_y_train_values
+print(Results_train.head())
+
+#%%
+
+# Calculate in-sample mean_squared_error (for comparison to out-of-sample)
+mse = mean_squared_error(y_train, predicted_y_train_values)
+print(mse)
+
+#%%
+
+# Calculate in-sample root mean_squared_error (for comparison to out-of-sample)
+rmse = np.sqrt(mse)
+print(rmse)
