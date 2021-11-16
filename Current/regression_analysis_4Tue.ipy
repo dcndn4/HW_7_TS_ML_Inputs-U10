@@ -1,0 +1,184 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Nov 13 15:38:36 2021
+
+@author: CS_Knit_tinK_SC
+"""
+
+import numpy as np
+import pandas as pd
+from pathlib import Path
+%matplotlib inline
+
+#%%
+
+# Regression Analysis: Seasonal Effects with Sklearn Linear Regression¶
+
+# In this notebook, you will build a SKLearn linear regression model 
+# to predict Yen futures ("settle") returns with lagged Yen futures returns.
+
+#%%
+
+# Futures contract on the Yen-dollar exchange rate:
+# This is the continuous chain of the futures contracts that are 1 month to expiration
+filepath="C:/Users/CS_Knit_tinK_SC/Documents/GitHub/HW_7_TS_ML_Inputs-U10/Resources/yen.csv"
+yen_futures = pd.read_csv(filepath, index_col="Date", infer_datetime_format=True, parse_dates=True)
+
+yen_futures.head()
+
+#%%
+
+# Trim the dataset to begin on January 1st, 1990
+yen_futures = yen_futures.loc["1990-01-01":, :]
+yen_futures.head()
+
+#%%
+
+# Data Preparation¶
+# Returns
+
+
+#%%
+
+# Create a series using "Settle" price percentage returns, drop any nan"s, and check the results:
+# (Make sure to multiply the pct_change() results by 100)
+# In this case, you may have to replace inf, -inf values with np.nan"s
+returns = (yen_futures[["Settle"]].pct_change() * 100)
+returns = returns.replace(-np.inf, np.nan).dropna()
+returns.rename(columns={'Settle':'Returns'}, inplace=True)
+returns.tail()
+
+#%%
+
+# Lagged Returns
+
+#%%
+
+# Create a lagged return using the shift function
+returns['Lagged_Return'] = returns.shift()  # creates a lag of 1, for autoregressive factor
+print(returns.tail())
+
+#%%
+
+# Train Test Split
+
+#%%
+
+# Create a train/test split for the data using 2018-2019 for testing and the rest for training
+train = returns.loc[:"2017"].dropna()
+test = returns.loc["2018":"2019"]
+
+
+#%%
+
+# Create four dataframes:
+# X_train (training set using just the independent variables), X_test (test set of of just the independent variables)
+# Y_train (training set using just the "y" variable, i.e., "Futures Return"), Y_test (test set of just the "y" variable):
+X_train = train["Lagged_Return"].to_frame()
+X_test = test["Lagged_Return"].to_frame()
+
+y_train = train["Returns"]
+y_test = test["Returns"]
+
+#%%
+
+print(X_train)
+
+#%%
+#%%
+#%%
+
+# Linear Regression Model
+
+#%%
+#%%
+#%%
+
+# Create a Linear Regression model and fit it to the training data
+from sklearn.linear_model import LinearRegression
+
+X = X_train.Lagged_Return.values.reshape(-1, 1)
+Y = train["Returns"]
+
+# Fit a SKLearn linear regression using just the training set (X_train, Y_train):
+
+model = LinearRegression()
+#%%
+
+# X = df.index.values.reshape(-1,1)  # = df.index.to_frame()
+# y = df['Price']
+
+#%%
+
+model.fit(X_train, y_train)
+
+#%%
+#%%
+#%%
+
+# Make predictions using the Testing Data¶
+
+# Note: We want to evaluate the model using data that it has never seen before, in this case: X_test.
+
+#%%
+#%%
+#%%
+
+# Make a prediction of "y" values using just the test dataset
+X2 = X_test.Lagged_Return.values.reshape(-1, 1)
+#%%
+predicted_y_values = model.predict(X2)
+
+#%%
+
+print(predicted_y_values)
+#%%
+
+# Assemble actual y data (Y_test) with predicted y data (from just above) into two columns in a dataframe:
+# Assemble actual y data (Y_test) with predicted y data (from just above) into two columns in a dataframe:
+Results = y_test.to_frame()
+
+#%%
+Results["Predicted Return"] = predicted_y_values
+
+#%%
+
+print(Results.head())
+
+#%%
+
+# Plot the first 20 predictions vs the true values
+Results[:20].plot(subplots=True)
+
+
+
+#%%%
+#%%%
+#%%
+# Out-of-Sample Performance¶
+
+# Evaluate the model using "out-of-sample" data (X_test and y_test)
+
+#%%
+#%%
+#%%
+
+from sklearn.metrics import mean_squared_error
+# Calculate the mean_squared_error (MSE) on actual versus predicted test "y" 
+
+# Mean Squared Error
+mse = mean_squared_error(y_test, predicted_y_values)
+print(mse)
+
+#%%
+
+# Using that mean-squared-error, calculate the root-mean-squared error (RMSE):
+rmse = np.sqrt(mse)
+print(rmse)
+
+#%%
+
+
+
+#%%
+
