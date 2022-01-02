@@ -26,7 +26,7 @@ from pathlib import Path
 
 # absolute path method  - while in process
 # C:\Users\CS_Knit_tinK_SC\Documents\GitHub\HW_7_TS_ML_Inputs-U10
-filepath="C:/Users/CS_Knit_tinK_SC/Documents/GitHub/HW_7_TS_ML_Inputs-U10/Resources/yen.csv"
+filepath="./Resources/yen.csv"
 yen_futures = pd.read_csv(filepath, index_col="Date", infer_datetime_format=True, parse_dates=True)
 
 
@@ -73,6 +73,8 @@ import statsmodels.api as sm
 ts_noise, ts_trend = sm.tsa.filters.hpfilter(yen_futures['Settle'])
 
 #%%
+
+# Create a dataframe of just the settle price, and add columns for "noise" and "trend" series from above:
 data_result = yen_futures[['Settle']]
 
 #%%
@@ -86,6 +88,8 @@ ts_new = pd.concat([ts_trend, ts_noise], axis=1)
 all_three=pd.concat([data_result, ts_new], axis=1)
 
 all_three.rename(columns={'Settle_trend':'Trend','Settle_cycle':'Noise'}, inplace=True)
+print(all_three.head())
+
 
 #%%
 
@@ -93,7 +97,7 @@ all_three.rename(columns={'Settle_trend':'Trend','Settle_cycle':'Noise'}, inplac
 settle_trend_2015 = all_three.loc['2015':'2020']
 
 #%%
-settle_trend_2015.tail()
+print(settle_trend_2015.tail())
 
 #%%
 
@@ -123,7 +127,7 @@ settle_trend_2015[["Noise"]].plot(title="Noise - 2015-2020")
 returns = (yen_futures[["Settle"]].pct_change() * 100)
 returns.rename(columns={'Settle':'Return_Amt'}, inplace=True)
 returns = returns.replace(-np.inf, np.nan).dropna()
-returns.tail()
+print(returns.tail())
 
 #%%
 
